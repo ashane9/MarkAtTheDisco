@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+	html {
+		height:100%;
+		width:100%;
+}
+	body {
+		background-color:black;
+		z-index:-10;
+		height:90%;
+		width:90%;
+	}
+	
+	.light {
+		height:10%;
+		width:5%;
+		position:fixed;
+		border-radius:50%;
+		border: solid 2px gray;
+	}
+	
+	#light1 {
+		background-color:red;
+		left:20%;
+		top:5%;
+	}
+	
+	#light2 {
+		background-color:blue;
+		left:10%;
+		top:7%;
+	}
+	
+	#light3 {
+		background-color:yellow;
+		left:0%;
+		top:10%;
+	}
+	
+	#light4 {
+		background-color:red;
+		left:58%;
+		top:5%;
+	}
+	
+	#light5 {
+		background-color:blue;
+		left:68%;
+		top:7%;
+	}
+	
+	#light6 {
+		background-color:yellow;
+		left:78%;
+		top:10%;
+	}
+
+	.song {
+		visibility:hidden;
+	}
+	
+	#test {
+		color:green;
+	}
+	
+	.buttons {
+		text-align:center;
+		border: 2px solid white;
+		border-radius: 15%;
+		background-color:black;
+		color:white;
+		font-family:Impact;
+	}
+	</style>
+</head>
+<body>
+	<input class="buttons" id="headButton" value="Head Dance" type="button" onClick="intervalMovement(1); playSong(2)" style="position:fixed; left:1%; top:95%;"></input>
+	<input class="buttons" id="danceButton" value="Dance" type="button" onClick="intervalMovement(1); intervalMovement(3); playSong(1)" style="position:fixed; left:7.9%; top:95%;"></input>
+	<!--<input id="testStuff" value="Test Stuff" type="button" onClick="testStuff()"></input>-->
+	<input class="buttons" id="reset" value="Stop Dance" type="button" onClick="intervalMovement(5); clickCounter(1)" style="position:fixed; left:12.75%; top:95%;"></input>
+	<input class="buttons" id="danceUpButton" value="Up Dance" type="button" onClick="intervalMovement(6); intervalMovement(8); playSong(3);" style="position:fixed; left:19.1%; top:95%;"></input>
+	<audio id="song1" class="song" controls><source src="Shake It Cut.mp3"></audio> 
+	<audio id="song2" class="song" controls><source src="Cant Touch This Cut.mp3"></audio>
+	<audio id="song3" class="song" controls><source src="Electric.mp3"></audio> 
+	<p id="test"></p>
+	<img id="marksHead" src="Mark Head.png" style="height:28%; width:16%; position:fixed; left:40%; top:30%;">
+	<img id="marksBody" src="Jurassic Park Guy Edited.png" style="height:28%; width:16%; position:fixed; left:39%; top:48%; z-index:-1;">
+	<img id="discoFloor" src="myDiscoFloorEdited.png" style="height:100%; width:80%; position:fixed; left:8%; top:30%;z-index:-2;">
+	<img id="discoBall" src="discoBallEdited.png" style="height:25%; width:15%; position:fixed; left:35%; top:-1%;z-index:-2;">
+	<div class="light" id="light1"></div>
+	<div class="light" id="light2"></div>
+	<div class="light" id="light3"></div>
+	<div class="light" id="light4"></div>
+	<div class="light" id="light5"></div>
+	<div class="light" id="light6"></div>
+
+	
+	<script>
+	var up;
+	var down;
+	var right;
+	var left;
+	var strobe;
+	var light;
+	var danceReset;
+	var resetClick = 0;
+	var danceUp;
+	var danceDown;
+	var headLeft;
+	var headRight;
+	
+	marksHead = document.getElementById("marksHead");
+	marksBody = document.getElementById("marksBody");
+	test = document.getElementById("test");
+	light1 = document.getElementById("light1");
+	light2 = document.getElementById("light2");
+	light3 = document.getElementById("light3");
+	light4 = document.getElementById("light4");
+	light5 = document.getElementById("light5");
+	light6 = document.getElementById("light6");
+	headButton = document.getElementById("headButton");
+	danceButton = document.getElementById("danceButton");
+	headTopStart = parseInt(marksHead.style.top);
+	headLeftStart = parseInt(marksHead.style.left);
+	
+	function headUp() {
+		if (parseInt(marksHead.style.top) <= 34) {
+			marksHead.style.top = parseInt(marksHead.style.top) + 1 + "%";
+		} else {
+			clearInterval(up);
+			intervalMovement(2);
+		}
+	}
+	
+	function headDown() {
+		if (parseInt(marksHead.style.top) > 30) {
+			marksHead.style.top = parseInt(marksHead.style.top) - 1 + "%";
+		} else {
+			clearInterval(down);
+			intervalMovement(1);
+		}
+	}
+	
+	function headToRight() {
+		test.innerHTML = parseInt(marksHead.style.left);
+		if (parseInt(marksHead.style.left) < 41) {
+			marksHead.style.left = parseInt(marksHead.style.left) + 1 + "%";
+		} else {
+			clearInterval(headRight);
+			intervalMovement(9);
+		}
+	}
+	
+	function headToLeft() {
+		if (parseInt(marksHead.style.left) > 39) {
+			marksHead.style.left = parseInt(marksHead.style.left) - 1 + "%";
+		} else {
+			clearInterval(headLeft);
+			intervalMovement(8);
+		}
+	}
+	
+	function slideRight() {
+		if (parseInt(marksHead.style.left) <= 60) {
+			marksBody.style.left = parseInt(marksBody.style.left) + 1 + "%";
+			marksHead.style.left = parseInt(marksHead.style.left) + 1 + "%";
+		} else {
+			clearInterval(right);
+			intervalMovement(4);
+		}
+	}
+	
+	function slideLeft() {
+		if (parseInt(marksHead.style.left) > 20) {
+			marksBody.style.left = parseInt(marksBody.style.left) - 1 + "%";
+			marksHead.style.left = parseInt(marksHead.style.left) - 1 + "%";
+		} else {
+			clearInterval(left);
+			intervalMovement(3);
+		}
+	}
+	
+	function slideUp() {
+		if (parseInt(marksHead.style.top) > 10) {
+			marksBody.style.top = parseInt(marksBody.style.top) - 1 + "%";
+			marksHead.style.top = parseInt(marksHead.style.top) - 1 + "%";
+		} else {
+			clearInterval(danceUp);
+			intervalMovement(7);
+		}
+	}
+	
+		function slideDown() {
+		if (parseInt(marksHead.style.top) < 50) {
+			marksBody.style.top = parseInt(marksBody.style.top) + 1 + "%";
+			marksHead.style.top = parseInt(marksHead.style.top) + 1 + "%";
+		} else {
+			clearInterval(danceDown);
+			intervalMovement(6);
+		}
+	}
+	
+	function intervalMovement(movement) {
+		headButton.style.visibility = "hidden";
+		danceButton.style.visibility = "hidden";
+		clearInterval(strobe);
+		strobe = setInterval("strobeEffect()", 200);
+		clearInterval(light);
+		light = setInterval("lightEffect()", 100);
+		if (movement == 1) {
+			up = setInterval("headUp()", 40);
+		} else if (movement == 2) {
+			down = setInterval("headDown()", 40);
+		} else if (movement == 3) {
+			right = setInterval("slideRight()", 40);
+		} else if (movement == 4) {
+			left = setInterval("slideLeft()", 40);
+		} else if (movement == 5) {
+			danceReset = setInterval("BackToStart()", 40);
+		} else if (movement == 6) {
+			danceUp = setInterval("slideUp()", 40);
+		} else if (movement == 7) {
+			danceDown = setInterval("slideDown()", 40);
+		} else if (movement == 8) {
+			//test.innerHTML = parseInt(marksHead.style.left);
+			headRight = setInterval("headToRight()", 40);
+		} else if (movement == 9) {
+			headLeft = setInterval("headToLeft()", 40);
+		}
+	}
+	
+	function strobeEffect() {
+		document.body.style.backgroundColor = document.body.style.backgroundColor == 'black' ? 'white' : 'black';
+
+	}
+	
+	function lightEffect() {
+		light1.style.backgroundColor = light1.style.backgroundColor == 'red' ? 'purple' : 'red';
+		light2.style.backgroundColor = light2.style.backgroundColor == 'blue' ? 'green' : 'blue';
+		light3.style.backgroundColor = light3.style.backgroundColor == 'yellow' ? 'orange' : 'yellow';
+		light4.style.backgroundColor = light4.style.backgroundColor == 'red' ? 'purple' : 'red';
+		light5.style.backgroundColor = light5.style.backgroundColor == 'blue' ? 'green' : 'blue';
+		light6.style.backgroundColor = light6.style.backgroundColor == 'yellow' ? 'orange' : 'yellow';
+	}
+	
+	function playSong(song) {
+		if (song == 1) {
+			song1.play();
+		} else if (song == 2) {
+			song2.play();
+		} else if (song == 3) {
+			song3.play();
+		}
+	}
+	
+	function testStuff() {
+		test.innerHTML = (clickCounter(2) % 2);
+	}
+	
+	function BackToStart() {
+		var currentHeadTop = parseInt(marksHead.style.top);
+		var currentHeadLeft = parseInt(marksHead.style.left);
+		var currentBodyTop = parseInt(marksBody.style.top);
+		var currentBodyLeft = parseInt(marksBody.style.left);
+		
+		clearInterval(up);
+		clearInterval(down);
+		clearInterval(right);
+		clearInterval(left);
+		clearInterval(light);
+		clearInterval(strobe);
+		clearInterval(headLeft);
+		clearInterval(headRight);
+		clearInterval(danceDown);
+		clearInterval(danceUp);
+		document.body.style.backgroundColor = 'black';
+
+		if (headTopStart < currentHeadTop && headLeftStart < currentHeadLeft) {
+			marksBody.style.left = currentBodyLeft - 1 + "%";
+			marksHead.style.top = currentHeadTop - 1 + "%";
+			marksHead.style.left = currentHeadLeft - 1 + "%";
+		} else if (headTopStart < currentHeadTop && headLeftStart > currentHeadLeft) {
+			marksBody.style.left = currentBodyLeft + 1 + "%";
+			marksHead.style.top = currentHeadTop - 1 + "%";
+			marksHead.style.left = currentHeadLeft + 1 + "%";	
+		} else if (headTopStart == currentHeadTop && headLeftStart < currentHeadLeft) {
+			marksBody.style.left = currentBodyLeft - 1 + "%";
+			marksHead.style.left = currentHeadLeft - 1 + "%";
+		} else if (headTopStart == currentHeadTop && headLeftStart > currentHeadLeft) {
+			marksBody.style.left = currentBodyLeft + 1 + "%";
+			marksHead.style.left = currentHeadLeft + 1 + "%";	
+		} else if (headTopStart < currentHeadTop && headLeftStart == currentHeadLeft) {
+			marksHead.style.top = currentHeadTop - 1 + "%";
+		} else if (headTopStart == currentHeadTop && headLeftStart == currentHeadLeft) {
+			clearInterval(danceReset);
+			headButton.style.visibility = "visible";
+			danceButton.style.visibility = "visible";
+			song1.currentTime = 0;
+			song2.currentTime = 0;
+			song3.currentTime = 0;
+			song1.pause();
+			song2.pause();
+			song3.pause();
+		}
+	}
+	
+	function clickCounter(button) {
+		if (button == 1) {
+			resetClick = resetClick + 1
+		} else if (button == 2) {
+			return resetClick % 2;
+		}
+	}
+	
+	
+	</script>
+	
+</body>
+</html>
